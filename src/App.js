@@ -1,19 +1,31 @@
-import './index.css';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { increment, decrement, incrementAmount } from './features/slices/CounterSlices';
-
+import { fetchPost } from './features/slices/CountriesSlices';
+import './index.css';
 
 function App() {
   const dispatch = useDispatch();
-const counter = useSelector(state => state?.counter)
-console.log(counter)
+  useEffect(()=>{
+    dispatch(fetchPost());
+  },[]);
+
+  const post = useSelector(state => state.post);
+  const {postsList, loading} = post
+  console.log({postsList, loading})
   return (
     <div className="App">
-      <h1>Redux toolkit counter</h1>
- <h2>counter: {counter.value}</h2>
-  <button onClick={()=> dispatch(increment())}>+</button>
-  <button onClick={()=> dispatch(decrement())}>-</button>
-  <button onClick={()=> dispatch(incrementAmount(5))}>incrementAmount</button>
+   <h1>hi</h1>
+   <hr/>
+   {loading? <h2>Loading...</h2> :  postsList?.map((post, index) => (
+     <div key={index}>
+      <img src={post.flags.png} alt='flag' />
+      <p>{post.name.common}</p>
+          <p>Official Name:{post.name.official}</p>
+          <p>Continent: {post.continents}</p>
+          <p>Populatio:{post.population}</p>
+      <hr/>
+     </div>
+   ))}
     </div>
   );
 }
